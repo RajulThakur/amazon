@@ -1,11 +1,11 @@
-console.log('Hello')
+console.log("Hello");
 
-const productGridElement=document.querySelector('.js-products-grid')
+const productGridElement = document.querySelector(".js-products-grid");
 
 //generating products from js
-let productGridHtml='';
-products.forEach((product)=>{
-  productGridHtml+=`<div class="product-container">
+let productGridHtml = "";
+products.forEach((product) => {
+  productGridHtml += `<div class="product-container">
           <div class="product-image-container">
             <img class="product-image"
               src=${product.image}>
@@ -17,14 +17,14 @@ products.forEach((product)=>{
 
           <div class="product-rating-container">
             <img class="product-rating-stars"
-              src="images/ratings/rating-${product.rating.stars*10}.png">
+              src="images/ratings/rating-${product.rating.stars * 10}.png">
             <div class="product-rating-count link-primary">
               ${product.rating.count}
             </div>
           </div>
 
           <div class="product-price">
-            $${(product.priceCents/100).toFixed(2)}
+            $${(product.priceCents / 100).toFixed(2)}
           </div>
 
           <div class="product-quantity-container">
@@ -49,11 +49,29 @@ products.forEach((product)=>{
             Added
           </div>
 
-          <button class="add-to-cart-button button-primary">
+          <button class="add-to-cart-button button-primary" data-product-id='${
+            product.id
+          }'>
             Add to Cart
           </button>
-        </div>`
-})
-productGridElement.innerHTML=productGridHtml;
+        </div>`;
+});
+productGridElement.innerHTML = productGridHtml;
 
-console.log(products)
+console.log(products);
+
+document.querySelectorAll(".add-to-cart-button").forEach((button) =>
+  button.addEventListener("click", () => {
+    const { productId } = button.dataset;
+    let isPresent = false;
+    cart.forEach((product) => {
+      if (product.id === productId) {
+        isPresent=true;
+        product.quantity++;
+        return;
+      }
+    });
+    !isPresent && cart.push({id:productId,quantity: 1,});
+    console.log(cart);
+  })
+);

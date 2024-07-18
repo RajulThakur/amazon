@@ -58,11 +58,15 @@ products.forEach((product) => {
 });
 productGridElement.innerHTML = productGridHtml;
 
-console.log(products);
+const cartQuantityEle=document.querySelector('.js-cart-quantity');
+let cartQuantity= 0 //cart.reduce((acc,ele)=>acc+ele.quantity,0) ||;
 
 document.querySelectorAll(".add-to-cart-button").forEach((button) =>
   button.addEventListener("click", () => {
     const { productId } = button.dataset;
+    //updating cart quantity
+    cartQuantity++;
+    cartQuantityEle.innerHTML=cartQuantity;
     let isPresent = false;
     cart.forEach((product) => {
       if (product.id === productId) {
@@ -75,3 +79,5 @@ document.querySelectorAll(".add-to-cart-button").forEach((button) =>
     console.log(cart);
   })
 );
+
+//adding

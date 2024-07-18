@@ -1,4 +1,3 @@
-console.log("Hello");
 
 const productGridElement = document.querySelector(".js-products-grid");
 
@@ -28,7 +27,7 @@ products.forEach((product) => {
           </div>
 
           <div class="product-quantity-container">
-            <select id=${'js-quantity-selector-'+product.id}>
+            <select id=${"js-quantity-selector-" + product.id}>
               <option selected value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -44,12 +43,12 @@ products.forEach((product) => {
 
           <div class="product-spacer"></div>
 
-          <div class="added-to-cart">
+          <div class="added-to-cart ${"js-added-to-cart-" + product.id}">
             <img src="images/icons/checkmark.png">
             Added
           </div>
 
-          <button class="add-to-cart-button button-primary" data-product-id='${
+          <button class="add-to-cart-button  button-primary" data-product-id='${
             product.id
           }'>
             Add to Cart
@@ -58,27 +57,44 @@ products.forEach((product) => {
 });
 productGridElement.innerHTML = productGridHtml;
 
-const cartQuantityEle=document.querySelector('.js-cart-quantity');
-let cartQuantity= 0 //cart.reduce((acc,ele)=>acc+ele.quantity,0) ||;
-
+const cartQuantityEle = document.querySelector(".js-cart-quantity");
+let cartQuantity = 0; //cart.reduce((acc,ele)=>acc+ele.quantity,0) ||;
+let prevButtonAnim;
+let prevTimeoutId;
 document.querySelectorAll(".add-to-cart-button").forEach((button) =>
   button.addEventListener("click", () => {
     const { productId } = button.dataset;
-    const cartQuantitySelectorEle=document.querySelector(`#${'js-quantity-selector-'+productId}`);
-    const productToAdd=+cartQuantitySelectorEle.value;
+    const addToCartAnimEle = document.querySelector(
+      `.js-added-to-cart-${productId}`
+    );
+    const cartQuantitySelectorEle = document.querySelector(
+      `#${"js-quantity-selector-" + productId}`
+    );
+    //added to cart animation adding
+    addToCartAnimEle.style.opacity = 1;
+    //geting value from select element
+    const productToAdd = +cartQuantitySelectorEle.value;
     //updating cart quantity
-    cartQuantity+=productToAdd;
-    cartQuantityEle.innerHTML=cartQuantity;
+    cartQuantity += productToAdd;
+    cartQuantityEle.innerHTML = cartQuantity;
     let isPresent = false;
     cart.forEach((product) => {
-      if (product.id === productId) {
-        isPresent=true;
-        product.quantity++;
+      if (product.productId === productId) {
+        isPresent = true;
+        product.quantity += productToAdd;
         return;
       }
     });
-    !isPresent && cart.push({id:productId,quantity:productToAdd,});
-    console.log(cart);
+    !isPresent && cart.push({ productId, quantity: cartQuantity });
+    //added to cart  animation remove
+    if (prevTimeoutId) {
+      clearTimeout(prevTimeoutId);
+      prevButtonAnim.style.opacity=0;
+    }
+    prevTimeoutId = setTimeout(() => {
+      addToCartAnimEle.style.opacity = 0;
+    }, 2000);
+    prevButtonAnim=addToCartAnimEle;
   })
 );
 

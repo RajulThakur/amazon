@@ -1,12 +1,9 @@
-export const cart=[{
-  productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
-  quantity:1
-},{
-  productId: "02e3a47e-dd68-467e-9f71-8bf6f723fdae",
-  quantity:2
-}];
+import addToLocal from "../scripts/utils/addtoLocal.js";
+import getFromLocal from "../scripts/utils/getFromCart.js";
 
- export function addToCart(productId) {
+export let cart = getFromLocal("cart") || [];
+
+export function addToCart(productId) {
   //geting value from select element
   const cartQuantitySelectorEle = document.querySelector(
     `#${"js-quantity-selector-" + productId}`
@@ -18,19 +15,27 @@ export const cart=[{
     if (product.productId === productId) {
       isPresent = true;
       product.quantity += productToAdd;
+      addToLocal(cart, "cart");
       return;
     }
   });
   !isPresent && cart.push({ productId, quantity: productToAdd });
+  addToLocal(cart, "cart");
 }
 
-export function updateCartQuantity(){
+export function updateCartQuantity() {
   const cartQuantityEle = document.querySelector(".js-cart-quantity");
   let cartQuantity = 0; //cart.reduce((acc,ele)=>acc+ele.quantity,0) ||;
-  cart.forEach(cartItem=>{
-    cartQuantity+=cartItem.quantity
-  })
-  cartQuantityEle.innerHTML=cartQuantity;
-
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
+  cartQuantityEle.innerHTML = cartQuantity;
+  addToLocal(cart, "cart");
 }
 
+export default function removeFromCart(productId) {
+  const newCart = cart.filter((item) => item.productId !== productId);
+  console.log(newCart);
+  cart = newCart;
+  addToLocal(cart,'cart')
+}

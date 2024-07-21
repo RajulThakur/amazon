@@ -1,6 +1,13 @@
-import removeFromCart, { cart } from "../data/cart.js";
+import { removeFromCart, cart, itemsInCart, updateQuantity } from "../data/cart.js";
 import { products } from "../data/products.js";
+import addToLocal from "./utils/addtoLocal.js";
 import formatCurrency from "./utils/money.js";
+
+renderTotalItems();
+function renderTotalItems() {
+  const totalItemsEle = document.querySelector(".js-return-to-home-link");
+  totalItemsEle.innerHTML = `${itemsInCart()} items`;
+}
 
 function renderCheckout() {
   const orderSummaryEle = document.querySelector(".js-order-summary");
@@ -32,11 +39,19 @@ function renderCheckout() {
                   </div>
                   <div class="product-quantity">
                     <span>
-                      Quantity: <span class="quantity-label">${
+                      Quantity: <span class="quantity-label js-quantity-label-${cartItem.productId}">${
                         cartItem.quantity
                       }</span>
                     </span>
-                    <span class="update-quantity-link link-primary">
+                     <input class='quantity-input js-quantity-input-${
+                       cartItem.productId
+                     }' type='text'/>
+                    <span class='save-quantity link-primary js-save-quantity-${
+                      cartItem.productId
+                    }'>Save</span>
+                    <span class="update-quantity-link js-update-quantity-link link-primary" data-product-id=${
+                      cartItem.productId
+                    }>
                       Update
                     </span>
                     <span class="delete-quantity-link js-delete-link link-primary" data-product-id=${
@@ -94,15 +109,45 @@ function renderCheckout() {
               </div>
             </div>`;
   });
-  
+
   orderSummaryEle.innerHTML = cartHTML;
 }
+
 renderCheckout();
-console.log(cart);
+
 document.querySelectorAll(".js-delete-link").forEach((deleteEle) => {
   deleteEle.addEventListener("click", () => {
     const { productId } = deleteEle.dataset;
     removeFromCart(productId);
     document.querySelector(`.cart-item-container-${productId}`).remove();
+    renderTotalItems();
   });
+});
+
+document.querySelectorAll(".update-quantity-link").forEach((updateEle) => {
+  updateEle.addEventListener("click", () => {
+    const { productId } = updateEle.dataset;
+
+    const parentEle = document.querySelector(`.cart-item-container-${productId}`);
+    const quantityLabelEle=document.querySelector(`.js-quantity-label-${productId}`)
+    const saveEle = document.querySelector(`.js-save-quantity-${productId}`);
+    const inputEle = document.querySelector(`.js-quantity-input-${productId}`);
+    
+    parentEle.classList.toggle("is-editing-quantity");
+
+    function updatingQuantityValue(){
+      const updateCartQuantity=+inputEle.value;
+      parentEle.classList.remove("is-editing-quantity");
+      if(updateCartQuantity<0 || updateCartQuantity>1000) return;
+      updateQuantity(productId,updateCartQuantity);
+      quantityLabelEle.innerHTML = updateCartQuantity;
+      addToLocal(cart,'cart');
+      renderTotalItems();
+    }
+    inputEle.addEventListener('keydown',(e)=>{
+      if(e.key!=='Enter') return;
+      updatingQuantityValue();
+    });
+    saveEle.addEventListener("click", updatingQuantityValue);
+  })
 });

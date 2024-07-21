@@ -23,19 +23,27 @@ export function addToCart(productId) {
   addToLocal(cart, "cart");
 }
 
+export function itemsInCart(){
+  return cart.reduce((acc,item)=>acc+item.quantity,0);
+}
+
+export function updateQuantity(id,updatedQuantity){
+  cart.forEach(item=>{
+    if(item.productId===id){
+      item.quantity=updatedQuantity;
+      return;
+    }
+  })
+}
+
 export function updateCartQuantity() {
   const cartQuantityEle = document.querySelector(".js-cart-quantity");
-  let cartQuantity = 0; //cart.reduce((acc,ele)=>acc+ele.quantity,0) ||;
-  cart.forEach((cartItem) => {
-    cartQuantity += cartItem.quantity;
-  });
-  cartQuantityEle.innerHTML = cartQuantity;
+  cartQuantityEle.innerHTML = itemsInCart();
   addToLocal(cart, "cart");
 }
 
-export default function removeFromCart(productId) {
+export function removeFromCart(productId) {
   const newCart = cart.filter((item) => item.productId !== productId);
-  console.log(newCart);
   cart = newCart;
   addToLocal(cart,'cart')
 }

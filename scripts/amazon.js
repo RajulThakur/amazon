@@ -93,3 +93,4 @@ document.querySelectorAll(".add-to-cart-button").forEach((button) =>
   })
 );
 
+console.log(dayjs())

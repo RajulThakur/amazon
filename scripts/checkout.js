@@ -3,6 +3,7 @@ import {
   cart,
   itemsInCart,
   updateQuantity,
+  updateDeliveryOption,
 } from "../data/cart.js";
 import { deliveryOption } from "../data/deliveryOptions.js";
 import { products } from "../data/products.js";
@@ -22,17 +23,18 @@ function renderTotalItems() {
   totalItemsEle.innerHTML = `${itemsInCart()} items`;
 }
 
-function dateFormated(day=0){
-  return dayjs()
-  .add(day, "day")
-  .format("D MMM, dddd")
+function dateFormated(day = 0) {
+  return dayjs().add(day, "day").format("D MMM, dddd");
 }
+
 function renderDateSelector(cartItem) {
   let genHTML = "";
   deliveryOption.forEach((option, i) => {
     genHTML += `
                   
-                  <div class="delivery-option">
+                  <div class="delivery-option js-delivery-option" data-product-id=${
+                    cartItem.productId
+                  } data-delivery-option-id=${option.id}>
                     <input type="radio" ${
                       i + 1 === +cartItem.deliveryOptionId ? "checked" : ""
                     }
@@ -71,9 +73,8 @@ function renderCheckout() {
     const [selectedOption] = deliveryOption.filter(
       (option) => option.id === cartItem.deliveryOptionId
     );
-    console.log(selectedOption)
     cartHTML += `
-              <div class="delivery-date">
+              <div class="delivery-date js-delivery-date-${product.id}">
                 Delivery date: ${dateFormated(selectedOption.deliveryTime)}
               </div>
   
@@ -165,3 +166,14 @@ document.querySelectorAll(".update-quantity-link").forEach((updateEle) => {
     saveEle.addEventListener("click", updatingQuantityValue);
   });
 });
+
+document.querySelectorAll(".js-delivery-option").forEach((ele) => {
+  ele.addEventListener("click", () => {
+    const { productId, deliveryOptionId } = ele.dataset;
+    updateDeliveryOption(productId, deliveryOptionId);
+    //updating date
+    const [option]=deliveryOption.filter(option=>option.id===deliveryOptionId)
+    document.querySelector(`.js-delivery-date-${productId}`).innerHTML=`Delivery date: ${dateFormated(option.deliveryTime)}`;
+  });
+});
+

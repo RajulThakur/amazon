@@ -64,3 +64,10 @@ export function removeFromCart(productId) {
   cart = newCart;
   addToLocal(cart, "cart");
 }
+
+export function updateDeliveryOption(productId,deliveryId) {
+  const [matchingItem]=cart.filter(item=>item.productId===productId);
+  matchingItem.deliveryOptionId=deliveryId;
+  addToLocal('cart')
+  console.log(cart)
+}

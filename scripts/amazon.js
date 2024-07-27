@@ -1,6 +1,6 @@
 import { products } from "../data/products.js";
-import { addToCart,updateCartQuantity} from "../data/cart.js";
-import formatCurrency from "./utils/money.js";
+import { addToCart, updateCartQuantity } from "../data/cart.js";
+import formatCurrency from "./utils/formatCurrency.js";
 const productGridElement = document.querySelector(".js-products-grid");
 
 updateCartQuantity();
@@ -63,7 +63,6 @@ productGridElement.innerHTML = productGridHtml;
 let prevButtonAnim;
 let prevTimeoutId;
 
-
 function addedAnim(currEle) {
   //added to cart animation adding
   currEle.style.opacity = 1;
@@ -93,4 +92,4 @@ document.querySelectorAll(".add-to-cart-button").forEach((button) =>
   })
 );
 
-console.log(dayjs())
+console.log(dayjs());

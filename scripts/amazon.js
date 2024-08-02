@@ -91,5 +91,3 @@ document.querySelectorAll(".add-to-cart-button").forEach((button) =>
     prevButtonAnim = addToCartAnimEle;
   })
 );
-
-console.log(dayjs());

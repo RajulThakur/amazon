@@ -1,4 +1,3 @@
-
 import {
   removeFromCart,
   cart,
@@ -13,14 +12,18 @@ import getSame from "../utils/getSame.js";
 import formatCurrency from "../utils/formatCurrency.js";
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
 import { renderPaymentSummary } from "./paymentSummary.js";
+import renderCheckoutHeader from "./checkoutHeader.js";
+import isWeekend from "../utils/isWeekend.js";
 
-function renderTotalItems() {
-  const totalItemsEle = document.querySelector(".js-return-to-home-link");
-  totalItemsEle.innerHTML = `${itemsInCart()} items`;
-}
-
-function dateFormated(day = 0) {
-  return dayjs().add(day, "day").format("D MMM, dddd");
+function dateFormated(day) {
+  let finalDeliveryDate = dayjs();
+  while (day != 0) {
+    finalDeliveryDate=finalDeliveryDate.add(1, "day");
+    if (!isWeekend(finalDeliveryDate)) {
+      day--;
+    }
+  }
+  return finalDeliveryDate.format("D MMM, dddd");
 }
 
 function renderDateSelector(cartItem) {
@@ -64,7 +67,6 @@ function renderCheckout() {
   }
   cart.forEach((cartItem) => {
     const product = getProduct(cartItem.productId);
-    console.log(product);
     const [selectedOption] = deliveryOption.filter(
       (option) => option.id === cartItem.deliveryOptionId
     );
@@ -124,15 +126,14 @@ function renderCheckout() {
 }
 
 export function renderOrderSummary() {
-  renderTotalItems();
+  renderCheckoutHeader();
   renderCheckout();
 
   document.querySelectorAll(".js-delete-link").forEach((deleteEle) => {
     deleteEle.addEventListener("click", () => {
       const { productId } = deleteEle.dataset;
       removeFromCart(productId);
-      document.querySelector(`.cart-item-container-${productId}`).remove();
-      renderTotalItems();
+      renderCheckout();
       renderPaymentSummary();
     });
   });
@@ -161,7 +162,7 @@ export function renderOrderSummary() {
         updateQuantity(productId, updateCartQuantity);
         quantityLabelEle.innerHTML = updateCartQuantity;
         addToLocal(cart, "cart");
-        renderTotalItems();
+        renderCheckoutHeader();
         renderPaymentSummary();
       }
       inputEle.addEventListener("keydown", (e) => {

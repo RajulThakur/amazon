@@ -5,7 +5,6 @@ import getSame from "../utils/getSame.js";
 import formatCurrency from "../utils/formatCurrency.js";
 
 export function renderPaymentSummary() {
-  console.log("Payment summary");
   const totalItemAmountCent = cart.reduce((price, item) => {
     const productDetails = getProduct(item.productId);
     return price + productDetails.priceCents * item.quantity;
@@ -17,12 +16,6 @@ export function renderPaymentSummary() {
   const totalBeforeTaxCent = totalItemAmountCent + totalShippingChargeCent;
   const taxAmount=totalBeforeTaxCent*0.1;
   const totalAfterTaxCent = totalBeforeTaxCent * 1.1;
-  console.log(
-    totalAfterTaxCent,
-    totalBeforeTaxCent,
-    totalItemAmountCent,
-    totalShippingChargeCent
-  );
 
   const renderHTML= `
   <div class="payment-summary-title">

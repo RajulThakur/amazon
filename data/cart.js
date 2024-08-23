@@ -20,7 +20,7 @@ export let cart = getFromLocal("cart") || [
 ];
 
 export function addToCart(productId) {
-  //geting value from select element
+  //geting value  from select element
   const cartQuantitySelectorEle = document.querySelector(
     `#${"js-quantity-selector-" + productId}`
   );

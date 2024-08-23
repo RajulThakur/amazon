@@ -25,7 +25,6 @@ class Cart {
 
   constructor(localStrogekey){
     this.#localStKey=localStrogekey;
-    console.log(this);
   }
 
   addToCart(productId) {
@@ -33,7 +32,6 @@ class Cart {
     const cartQuantitySelectorEle = document.querySelector(
       `#${"js-quantity-selector-" + productId}`
     );
-    console.log(this);
     const productToAdd = +cartQuantitySelectorEle?.value || 1;
     let isPresent = false;
 

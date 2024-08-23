@@ -85,7 +85,7 @@ function renderCheckout() {
                     ${product.name}
                   </div>
                   <div class="product-price">
-                    $${formatCurrency(product.priceCents)}
+                    ${product.getPrice()}
                   </div>
                   <div class="product-quantity">
                     <span>

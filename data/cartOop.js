@@ -26,7 +26,6 @@ function Cart(localStKey){
       const cartQuantitySelectorEle = document.querySelector(
         `#${"js-quantity-selector-" + productId}`
       );
-      console.log(this);
       const productToAdd = +cartQuantitySelectorEle?.value ||1;
       let isPresent = false;
   
@@ -90,5 +89,3 @@ function Cart(localStKey){
 const cart=Cart('oopCart');
 const business=Cart('buisnessCart');
 cart.addToCart("58b4fc92-e98c-42aa-8c55-b6b79996769a");
-console.log(cart)
-console.log(business)

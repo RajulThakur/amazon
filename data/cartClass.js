@@ -2,8 +2,10 @@ import addToLocal from "../scripts/utils/addtoLocal.js";
 import getFromLocal from "../scripts/utils/getFromCart.js";
 
 class Cart {
-  localStKey=undefined;
-  cartItem = getFromLocal(this.localStKey) || [
+  //private property
+  #localStKey=undefined;
+  //public property
+  cartItem = getFromLocal(this.#localStKey) || [
     {
       productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
       quantity: 2,
@@ -22,7 +24,7 @@ class Cart {
   ];
 
   constructor(localStrogekey){
-    this.localStKey=localStrogekey;
+    this.#localStKey=localStrogekey;
     console.log(this);
   }
 
@@ -39,7 +41,7 @@ class Cart {
       if (product.productId === productId) {
         isPresent = true;
         product.quantity += productToAdd;
-        addToLocal(this.cartItem, this.localStKey);
+        addToLocal(this.cartItem, this.#localStKey);
         return;
       }
     });
@@ -49,7 +51,7 @@ class Cart {
         quantity: productToAdd,
         deliveryOptionId: "1",
       });
-    addToLocal(this.cartItem, this.localStKey);
+    addToLocal(this.cartItem, this.#localStKey);
   }
   itemsInCart() {
     return this.cartItem.reduce((acc, item) => acc + item.quantity, 0);
@@ -57,7 +59,7 @@ class Cart {
   updateCartQuantity() {
     const cartQuantityEle = document.querySelector(".js-cart-quantity");
     cartQuantityEle.innerHTML = itemsInCart();
-    addToLocal(this.cart, this.localStKey);
+    addToLocal(this.cart, this.#localStKey);
   }
 
   updateQuantity(id, updatedQuantity) {
@@ -74,7 +76,7 @@ class Cart {
       (item) => item.productId !== productId
     );
     this.cartItem = newCart;
-    addToLocal(this.cartItem, this.localStKey);
+    addToLocal(this.cartItem, this.#localStKey);
   }
 
   updateDeliveryOption(productId, deliveryId) {
@@ -82,11 +84,12 @@ class Cart {
       (item) => item.productId === productId
     );
     matchingItem.deliveryOptionId = deliveryId;
-    addToLocal(this.localStKey);
+    addToLocal(this.#localStKey);
   }
 }
 
 
 const cart =new Cart('cartClass');
+
 const business =new Cart('cartBusinessClass');
 

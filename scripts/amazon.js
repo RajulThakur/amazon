@@ -5,6 +5,7 @@ const productGridElement = document.querySelector(".js-products-grid");
 
 updateCartQuantity();
 //generating products from js
+
 let productGridHtml = "";
 products.forEach((product) => {
   productGridHtml += `<div class="product-container">
